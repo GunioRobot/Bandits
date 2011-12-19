@@ -2,7 +2,7 @@
  * agents.js
  *    Mark Reid <mark.reid@gmail.com>
  *    Created: 2010-04-05
- * 
+ *
  * Defines a number of agents for playing bandit games within the Agent
  * namespace.
  */
@@ -16,8 +16,8 @@ function sum(array) {
 
 function max(array) {
    var result = Number.NEGATIVE_INFINITY;
-   for(var i=0 ; i < array.length ; i++) { 
-      result = Math.max(result,array[i]); 
+   for(var i=0 ; i < array.length ; i++) {
+      result = Math.max(result,array[i]);
    }
    return result;
 }
@@ -41,7 +41,7 @@ function draw(probs) {
  */
 var Agent = {
    /**
-    * The constant prediction algorithm. 
+    * The constant prediction algorithm.
     * Always chooses bandit with index `i`.
     */
    Constant: function(i) {
@@ -52,7 +52,7 @@ var Agent = {
          init: function(num_bandits) { },
          predict: function() {
             this.predictions.push(index);
-            return index; 
+            return index;
          },
          update: function(reward) { this.rewards.push(reward); },
          rewards: [],
@@ -62,8 +62,8 @@ var Agent = {
 
    /**
     * An implementation of the UCB1 algorithm from:
-    *    P. Auer, N. Cesa-Bianchi, and P. Fischer. 
-    *    "Finite-time Analysis of the Multiarmed Bandit Problem." 
+    *    P. Auer, N. Cesa-Bianchi, and P. Fischer.
+    *    "Finite-time Analysis of the Multiarmed Bandit Problem."
     *    Machine Learning, 47, 235-236, 2002.
     */
    UCB1: function() {
@@ -112,8 +112,8 @@ var Agent = {
 
   /**
    * An implementation of the Exp3 algorithm from:
-   *    P. Auer, N. Cesa-Bianchi, Y. Freund, and R. Schapire. 
-   *    "The nonstochastic multiarmed bandit problem." 
+   *    P. Auer, N. Cesa-Bianchi, Y. Freund, and R. Schapire.
+   *    "The nonstochastic multiarmed bandit problem."
    *    SIAM Journal on Computing, 32(1):48–77, 2002.
    *
    * Returns an Exp3 algorithm initialised with input parameter gamma in (0,1].
@@ -126,11 +126,11 @@ var Agent = {
 
    /**
     * An implementation of the Exp3.S algorithm from:
-    *    P. Auer, N. Cesa-Bianchi, Y. Freund, and R. Schapire. 
-    *    "The nonstochastic multiarmed bandit problem." 
+    *    P. Auer, N. Cesa-Bianchi, Y. Freund, and R. Schapire.
+    *    "The nonstochastic multiarmed bandit problem."
     *    SIAM Journal on Computing, 32(1):48–77, 2002.
     *
-    * Returns an Exp3.S algorithm initialised with input parameter 
+    * Returns an Exp3.S algorithm initialised with input parameter
     * gamma in (0,1] and alpha >= 0.
     *
     * Note that when alpha = 0, this algorithm reduces to the original Exp3.
@@ -147,7 +147,7 @@ var Agent = {
             k = num_bandits;
             for(var i=0 ; i<k ; i++) { weights[0][i] = 1 }
          },
-         predict: function() { 
+         predict: function() {
             var p = draw(this.probs());
             this.predictions.push(p);
             return p;
@@ -163,7 +163,7 @@ var Agent = {
                weights[t1][i] = ws[i];
                if(i === this.predictions[t1-1]) {
                   var xhat = reward/(this.probs()[i]);
-                  weights[t1][i] *= Math.exp((gamma*xhat)/k); 
+                  weights[t1][i] *= Math.exp((gamma*xhat)/k);
                }
                weights[t1][i] += c;
             }
@@ -173,10 +173,10 @@ var Agent = {
             var ws = weights[weights.length-1];
             var total = sum(ws);
             var ps = [];
-            for(var i=0 ; i < k ; i++) { 
-               ps[i] = (1-gamma)*(ws[i]/total) + gamma/k; 
+            for(var i=0 ; i < k ; i++) {
+               ps[i] = (1-gamma)*(ws[i]/total) + gamma/k;
             }
-            return ps;      
+            return ps;
          },
          rewards: [],
          predictions: []
@@ -185,11 +185,11 @@ var Agent = {
 
    /**
     * An implementation of the Exp3.1 algorithm from:
-    *    P. Auer, N. Cesa-Bianchi, Y. Freund, and R. Schapire. 
-    *    "The nonstochastic multiarmed bandit problem." 
+    *    P. Auer, N. Cesa-Bianchi, Y. Freund, and R. Schapire.
+    *    "The nonstochastic multiarmed bandit problem."
     *    SIAM Journal on Computing, 32(1):48–77, 2002.
     *
-    * Returns an Exp3.1 agent 
+    * Returns an Exp3.1 agent
     */
    Exp31: function() {
       var   k = 0,            // Number of bandits
@@ -197,12 +197,12 @@ var Agent = {
             exp3 = undefined, // Exp3 subroutine
             totals = [],      // The estimated total reward for each bandit
             epochs = [],      // Which timestep each epoch started
-            g = 0,            // Guess for bound 
+            g = 0,            // Guess for bound
             gamma = 0;        // Parameter for Exp3 subroutine
 
       return {
          name: "Exp3.1",
-         init: function(num_bandits) { 
+         init: function(num_bandits) {
             k = num_bandits;
             for(var i=0 ; i < k ; i++) { totals[i] = 0; }
             r = 0;
@@ -247,7 +247,7 @@ var Agent = {
       return {
          name: "Random",
          init: function(num_bandits) { range = num_bandits; },
-         predict: function() { 
+         predict: function() {
             var p = Math.floor(Math.random() * range);
             this.predictions.push(p);
             return p;
